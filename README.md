@@ -1,5 +1,5 @@
-# Queens-Game-
-Group 2 Queens game, project assigned by Finjap Peter.
+# Quiz-Game-
+Group 2 Quiz game, project assigned by Finjap Peter.
 ======Task Assignment======
 Front end team: ui and menus
 Back end team: logic and routing
