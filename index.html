@@ -1,573 +1,504 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quizzy - Test Ya Sense</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Quizzy — Test Ya Sense</title>
 
-```
-    :root {
-        --bg-primary: #1a3a2e;
-        --bg-secondary: #0f2419;
-        --text-primary: #f4f1e8;
-        --text-secondary: #c4bfb0;
-        --accent-primary: #2d5f4a;
-        --accent-secondary: #4a8270;
-        --card-bg: rgba(45, 95, 74, 0.2);
-        --border-color: rgba(244, 241, 232, 0.2);
-    }
+<style>
+/* ---------------------------
+   DESIGN TOKENS
+----------------------------*/
+:root {
+  --bg-primary: #0f2f23;
+  --bg-secondary: #071b14;
 
-    body.light-mode {
-        --bg-primary: #f4f1e8;
-        --bg-secondary: #e8e3d6;
-        --text-primary: #1a3a2e;
-        --text-secondary: #4a6b5a;
-        --accent-primary: #c4bfb0;
-        --accent-secondary: #a89f8d;
-        --card-bg: rgba(196, 191, 176, 0.3);
-        --border-color: rgba(26, 58, 46, 0.3);
-    }
+  --surface: rgba(255,255,255,0.04);
+  --surface-elevated: rgba(255,255,255,0.08);
 
-    body {
-        font-family: 'Times New Roman', Times, serif;
-        background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
-        color: var(--text-primary);
-        line-height: 1.6;
-        min-height: 100vh;
-        transition: background 0.3s ease, color 0.3s ease;
-    }
+  --text-primary: #f5f7f2;
+  --text-muted: #c7d1c9;
 
-    /* Header Styles */
-    header {
-        background: rgba(26, 58, 46, 0.95);
-        backdrop-filter: blur(10px);
-        position: fixed;
-        width: 100%;
-        top: 0;
-        z-index: 1000;
-        border-bottom: 2px solid var(--border-color);
-    }
+  --accent-primary: #4aa383;
+  --accent-secondary: #76cbb0;
 
-    body.light-mode header {
-        background: rgba(244, 241, 232, 0.95);
-    }
+  --border-color: rgba(255,255,255,0.15);
+  --shadow-soft: 0 10px 30px rgba(0,0,0,0.25);
+  --shadow-strong: 0 20px 60px rgba(0,0,0,0.35);
 
-    nav {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 1rem 2rem;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+}
 
-    .logo {
-        font-size: 1.8rem;
-        font-weight: 700;
-        color: var(--text-primary);
-        font-style: italic;
-        letter-spacing: 1px;
-    }
+body.light-mode {
+  --bg-primary: #f4f3ee;
+  --bg-secondary: #e6e2d7;
 
-    .nav-links {
-        display: flex;
-        gap: 2rem;
-        list-style: none;
-        align-items: center;
-    }
+  --surface: rgba(0,0,0,0.04);
+  --surface-elevated: rgba(0,0,0,0.07);
 
-    .nav-links a {
-        color: var(--text-primary);
-        text-decoration: none;
-        font-size: 1.05rem;
-        transition: color 0.3s ease;
-        font-style: italic;
-    }
+  --text-primary: #1f2e28;
+  --text-muted: #516b61;
 
-    .nav-links a:hover {
-        color: var(--accent-secondary);
-    }
+  --accent-primary: #3c6f5a;
+  --accent-secondary: #5b8f78;
 
-    .theme-toggle {
-        background: var(--accent-primary);
-        color: var(--text-primary);
-        border: 2px solid var(--border-color);
-        padding: 0.5rem 1rem;
-        border-radius: 5px;
-        cursor: pointer;
-        font-family: 'Times New Roman', Times, serif;
-        font-size: 1rem;
-        transition: background 0.3s ease, transform 0.2s ease;
-    }
+  --border-color: rgba(0,0,0,0.15);
+}
 
-    .theme-toggle:hover {
-        background: var(--accent-secondary);
-        transform: translateY(-2px);
-    }
+/* ---------------------------
+   BASE
+----------------------------*/
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
-    body.light-mode .theme-toggle {
-        background: var(--text-primary);
-        color: var(--bg-primary);
-        border-color: var(--text-primary);
-    }
+body {
+  font-family: "Times New Roman", serif;
+  min-height: 100vh;
+  background:
+    radial-gradient(1200px 600px at top, rgba(255,255,255,0.06), transparent),
+    linear-gradient(135deg, var(--bg-primary), var(--bg-secondary));
+  color: var(--text-primary);
+  line-height: 1.6;
+  transition: background .4s ease, color .3s ease;
+}
 
-    body.light-mode .theme-toggle:hover {
-        background: var(--text-secondary);
-    }
+a { color: inherit; }
 
-    /* Mobile menu toggle */
-    .mobile-menu-toggle {
-        display: none;
-        background: var(--accent-primary);
-        color: var(--text-primary);
-        border: 2px solid var(--border-color);
-        padding: 0.5rem 1rem;
-        border-radius: 5px;
-        cursor: pointer;
-        font-size: 1.2rem;
-    }
+/* ---------------------------
+   HEADER
+----------------------------*/
+header {
+  position: fixed;
+  width: 100%;
+  top: 0;
+  z-index: 1000;
+  backdrop-filter: blur(14px);
+  background: linear-gradient(
+    to bottom,
+    rgba(0,0,0,0.35),
+    rgba(0,0,0,0.15)
+  );
+  border-bottom: 1px solid var(--border-color);
+}
 
-    body.light-mode .mobile-menu-toggle {
-        background: var(--text-primary);
-        color: var(--bg-primary);
-        border-color: var(--text-primary);
-    }
+nav {
+  max-width: 1200px;
+  margin: auto;
+  padding: 1rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
 
-    .cta-button {
-        background: var(--accent-primary);
-        color: var(--text-primary);
-        padding: 0.6rem 1.5rem;
-        border-radius: 5px;
-        text-decoration: none;
-        font-weight: 500;
-        border: 2px solid var(--border-color);
-        transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
-    }
+.logo {
+  font-size: 1.9rem;
+  font-weight: 700;
+  font-style: italic;
+  letter-spacing: 1.5px;
+}
 
-    .cta-button:hover {
-        transform: translateY(-2px);
-        background: var(--accent-secondary);
-        box-shadow: 0 10px 25px rgba(45, 95, 74, 0.3);
-    }
+.nav-links {
+  display: flex;
+  list-style: none;
+  gap: 2rem;
+  align-items: center;
+}
 
-    body.light-mode .cta-button {
-        background: var(--text-primary);
-        color: var(--bg-primary);
-        border-color: var(--text-primary);
-    }
+.nav-links a {
+  text-decoration: none;
+  color: var(--text-muted);
+  transition: color .3s ease;
+}
 
-    body.light-mode .cta-button:hover {
-        background: var(--text-secondary);
-        box-shadow: 0 10px 25px rgba(26, 58, 46, 0.3);
-    }
+.nav-links a:hover {
+  color: var(--accent-secondary);
+}
 
-    /* Hero Section */
-    .hero {
-        margin-top: 80px;
-        padding: 6rem 2rem 4rem;
-        text-align: center;
-        max-width: 1200px;
-        margin-left: auto;
-        margin-right: auto;
-    }
+.theme-toggle,
+.mobile-menu-toggle {
+  background: var(--surface-elevated);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  padding: .45rem .9rem;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background .3s ease, transform .2s ease;
+}
 
-    .hero h1 {
-        font-size: 3.5rem;
-        font-weight: 700;
-        margin-bottom: 1.5rem;
-        color: var(--text-primary);
-        font-style: italic;
-        letter-spacing: 2px;
-    }
+.theme-toggle:hover,
+.mobile-menu-toggle:hover {
+  background: var(--accent-primary);
+  transform: translateY(-2px);
+}
 
-    .hero p {
-        font-size: 1.3rem;
-        color: var(--text-secondary);
-        margin-bottom: 3rem;
-        max-width: 600px;
-        margin-left: auto;
-        margin-right: auto;
-        font-style: italic;
-    }
+.cta-button {
+  text-decoration: none;
+  padding: .6rem 1.6rem;
+  border-radius: var(--radius-sm);
+  background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+  color: #fff;
+  font-weight: 600;
+  box-shadow: var(--shadow-soft);
+  transition: transform .3s ease, box-shadow .3s ease;
+}
 
-    .hero-cta {
-        display: inline-block;
-        background: var(--accent-primary);
-        color: var(--text-primary);
-        padding: 1rem 3rem;
-        border-radius: 5px;
-        text-decoration: none;
-        font-size: 1.1rem;
-        font-weight: 600;
-        border: 2px solid var(--border-color);
-        transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
-    }
+.cta-button:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-strong);
+}
 
-    .hero-cta:hover {
-        transform: translateY(-3px);
-        background: var(--accent-secondary);
-        box-shadow: 0 15px 35px rgba(45, 95, 74, 0.4);
-    }
+/* ---------------------------
+   HERO
+----------------------------*/
+.hero {
+  margin-top: 90px;
+  padding: 6rem 2rem 5rem;
+  text-align: center;
+  max-width: 900px;
+  margin-inline: auto;
+}
 
-    body.light-mode .hero-cta {
-        background: var(--text-primary);
-        color: var(--bg-primary);
-        border-color: var(--text-primary);
-    }
+.hero h1 {
+  font-size: 3.6rem;
+  font-style: italic;
+  letter-spacing: 2px;
+}
 
-    body.light-mode .hero-cta:hover {
-        background: var(--text-secondary);
-        box-shadow: 0 15px 35px rgba(26, 58, 46, 0.4);
-    }
+.hero p {
+  margin: 1.8rem auto 3rem;
+  max-width: 600px;
+  font-size: 1.25rem;
+  color: var(--text-muted);
+}
 
-    /* Categories Section */
-    .categories {
-        max-width: 1200px;
-        margin: 4rem auto;
-        padding: 0 2rem;
-    }
+.hero-cta {
+  display: inline-block;
+  padding: 1rem 3rem;
+  border-radius: var(--radius-md);
+  background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+  color: #fff;
+  font-weight: 600;
+  text-decoration: none;
+  box-shadow: var(--shadow-soft);
+  transition: transform .3s ease, box-shadow .3s ease;
+}
 
-    .section-title {
-        text-align: center;
-        font-size: 2.5rem;
-        margin-bottom: 3rem;
-        font-weight: 700;
-        color: var(--text-primary);
-        font-style: italic;
-        letter-spacing: 1px;
-    }
+.hero-cta:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-strong);
+}
 
-    .category-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        gap: 2rem;
-    }
+/* ---------------------------
+   SECTIONS
+----------------------------*/
+.section-title {
+  text-align: center;
+  font-size: 2.6rem;
+  font-style: italic;
+  margin-bottom: 3.5rem;
+}
 
-    .category-card {
-        background: var(--card-bg);
-        border: 2px solid var(--border-color);
-        border-radius: 8px;
-        padding: 2.5rem;
-        text-align: center;
-        transition: transform 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
-        cursor: pointer;
-    }
+.categories,
+.features {
+  max-width: 1200px;
+  margin: 5rem auto;
+  padding: 0 2rem;
+}
 
-    .category-card:hover {
-        transform: translateY(-10px);
-        background: var(--accent-primary);
-        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-        border-color: var(--text-secondary);
-    }
+.category-grid,
+.features-grid {
+  display: grid;
+  gap: 2.5rem;
+}
 
-    .category-icon {
-        font-size: 3rem;
-        margin-bottom: 1rem;
-    }
+.category-grid {
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
 
-    .category-card h3 {
-        font-size: 1.5rem;
-        margin-bottom: 1rem;
-        color: var(--text-primary);
-        font-style: italic;
-    }
+.features-grid {
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
 
-    .category-card p {
-        color: var(--text-secondary);
-        font-size: 0.95rem;
-    }
+/* ---------------------------
+   CARDS
+----------------------------*/
+.category-card {
+  background: var(--surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 2.5rem;
+  text-align: center;
+  cursor: pointer;
+  transition: transform .4s ease, box-shadow .4s ease, background .4s ease;
+}
 
-    /* Features Section */
-    .features {
-        max-width: 1200px;
-        margin: 6rem auto;
-        padding: 0 2rem;
-    }
+.category-card:hover {
+  transform: translateY(-12px);
+  background: var(--surface-elevated);
+  box-shadow: var(--shadow-strong);
+}
 
-    .features-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 3rem;
-        margin-top: 3rem;
-    }
+.category-icon {
+  font-size: 3rem;
+  margin-bottom: 1.2rem;
+}
 
-    .feature-item {
-        text-align: center;
-    }
+.category-card h3 {
+  font-size: 1.45rem;
+  margin-bottom: .8rem;
+  font-style: italic;
+}
 
-    .feature-icon {
-        width: 70px;
-        height: 70px;
-        background: var(--accent-primary);
-        border: 2px solid var(--border-color);
-        border-radius: 8px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 0 auto 1.5rem;
-        font-size: 2rem;
-        transition: background 0.3s ease;
-    }
+.category-card p {
+  color: var(--text-muted);
+}
 
-    .feature-item:hover .feature-icon {
-        background: var(--accent-secondary);
-    }
+/* ---------------------------
+   FEATURES
+----------------------------*/
+.feature-item {
+  text-align: center;
+}
 
-    .feature-item h3 {
-        font-size: 1.3rem;
-        margin-bottom: 1rem;
-        color: var(--text-primary);
-        font-style: italic;
-    }
+.feature-icon {
+  width: 72px;
+  height: 72px;
+  margin: auto auto 1.4rem;
+  border-radius: var(--radius-md);
+  background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  color: #fff;
+  box-shadow: var(--shadow-soft);
+}
 
-    .feature-item p {
-        color: var(--text-secondary);
-    }
+.feature-item h3 {
+  font-size: 1.35rem;
+  margin-bottom: .6rem;
+  font-style: italic;
+}
 
-    /* Footer */
-    footer {
-        background: rgba(26, 58, 46, 0.95);
-        border-top: 2px solid var(--border-color);
-        margin-top: 6rem;
-        padding: 3rem 2rem 2rem;
-    }
+.feature-item p {
+  color: var(--text-muted);
+}
 
-    body.light-mode footer {
-        background: rgba(232, 227, 214, 0.95);
-    }
+/* ---------------------------
+   FOOTER
+----------------------------*/
+footer {
+  margin-top: 6rem;
+  padding: 4rem 2rem 2rem;
+  border-top: 1px solid var(--border-color);
+  background: linear-gradient(
+    to top,
+    rgba(0,0,0,0.25),
+    transparent
+  );
+}
 
-    .footer-content {
-        max-width: 1200px;
-        margin: 0 auto;
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 3rem;
-        margin-bottom: 2rem;
-    }
+.footer-content {
+  max-width: 1200px;
+  margin: auto;
+  display: grid;
+  gap: 3rem;
+  grid-template-columns: repeat(auto-fit, minmax(220px,1fr));
+}
 
-    .footer-section h4 {
-        margin-bottom: 1rem;
-        font-size: 1.1rem;
-        color: var(--text-primary);
-        font-style: italic;
-    }
+.footer-section h4 {
+  margin-bottom: 1rem;
+  font-style: italic;
+}
 
-    .footer-section ul {
-        list-style: none;
-    }
+.footer-section a {
+  text-decoration: none;
+  color: var(--text-muted);
+}
 
-    .footer-section ul li {
-        margin-bottom: 0.7rem;
-    }
+.footer-section a:hover {
+  color: var(--accent-secondary);
+}
 
-    .footer-section a {
-        color: var(--text-secondary);
-        text-decoration: none;
-        transition: color 0.3s ease;
-    }
+.footer-bottom {
+  margin-top: 3rem;
+  text-align: center;
+  color: var(--text-muted);
+  border-top: 1px solid var(--border-color);
+  padding-top: 2rem;
+}
 
-    .footer-section a:hover {
-        color: var(--accent-secondary);
-    }
+/* ---------------------------
+   MOBILE
+----------------------------*/
+.mobile-menu-toggle { display: none; }
 
-    .footer-section p {
-        color: var(--text-secondary);
-    }
-
-    .footer-bottom {
-        text-align: center;
-        padding-top: 2rem;
-        border-top: 2px solid var(--border-color);
-        color: var(--text-secondary);
-    }
-
-    @media (max-width: 768px) {
-        .hero h1 {
-            font-size: 2.5rem;
-        }
-
-        .nav-links {
-            display: none;
-            position: absolute;
-            top: 100%;
-            left: 0;
-            right: 0;
-            background: var(--bg-primary);
-            flex-direction: column;
-            padding: 2rem;
-            border-bottom: 2px solid var(--border-color);
-            gap: 1rem;
-        }
-
-        .nav-links.active {
-            display: flex;
-        }
-
-        .mobile-menu-toggle {
-            display: block;
-        }
-
-        nav {
-            flex-wrap: wrap;
-        }
-
-        .cta-button {
-            order: 3;
-            width: 100%;
-            text-align: center;
-            margin-top: 1rem;
-        }
-
-        .category-grid {
-            grid-template-columns: 1fr;
-        }
-    }
+@media (max-width: 768px) {
+  .nav-links {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    background: var(--bg-primary);
+    padding: 2rem;
+  }
+  .nav-links.active { display: flex; }
+  .mobile-menu-toggle { display: block; }
+}
 </style>
+
 <script>
-    function toggleTheme() {
-        document.body.classList.toggle('light-mode');
-        const theme = document.body.classList.contains('light-mode') ? 'light' : 'dark';
-        localStorage.setItem('theme', theme);
-    }
+function toggleTheme() {
+  document.body.classList.toggle("light-mode");
+  localStorage.setItem(
+    "theme",
+    document.body.classList.contains("light-mode") ? "light" : "dark"
+  );
+}
 
-    function toggleMobileMenu() {
-        const navLinks = document.querySelector('.nav-links');
-        navLinks.classList.toggle('active');
-    }
+function toggleMobileMenu() {
+  document.querySelector(".nav-links").classList.toggle("active");
+}
 
-    // Load saved theme on page load
-    document.addEventListener('DOMContentLoaded', () => {
-        const savedTheme = localStorage.getItem('theme');
-        if (savedTheme === 'light') {
-            document.body.classList.add('light-mode');
-        }
-    });
+document.addEventListener("DOMContentLoaded", () => {
+  if (localStorage.getItem("theme") === "light") {
+    document.body.classList.add("light-mode");
+  }
+});
 </script>
-```
-
 </head>
+
 <body>
-    <header>
-        <nav>
-            <div class="logo">Quizzy</div>
-            <button class="mobile-menu-toggle" onclick="toggleMobileMenu()">☰</button>
-            <ul class="nav-links">
-                <li><a href="#home">Home</a></li>
-                <li><a href="#categories">Categories</a></li>
-                <li><a href="#features">Features</a></li>
-                <li><a href="#about">About</a></li>
-                <li><button class="theme-toggle" onclick="toggleTheme()">☀️ / 🌙</button></li>
-            </ul>
-            <a href="quiz.html" class="cta-button">Start Quiz</a>
-        </nav>
-    </header>
+<header>
+  <nav>
+    <div class="logo">Quizzy</div>
+    <button class="mobile-menu-toggle" onclick="toggleMobileMenu()">☰</button>
+    <ul class="nav-links">
+      <li><a href="#home">Home</a></li>
+      <li><a href="#categories">Categories</a></li>
+      <li><a href="#features">Features</a></li>
+      <li><button class="theme-toggle" onclick="toggleTheme()">☀️ / 🌙</button></li>
+    </ul>
+    <a href="quiz.html" class="cta-button">Start Quiz</a>
+  </nav>
+</header>
 
-```
 <section class="hero" id="home">
-    <h1>Test ya sense</h1>
-    <p>Challenge your knowledge across multiple categories and compete with players worldwide</p>
-    <a href="quiz.html" class="hero-cta">Start Playing Now</a>
+  <h1>Test ya sense</h1>
+  <p>Challenge your knowledge across multiple categories and compete worldwide</p>
+  <a href="quiz.html" class="hero-cta">Start Playing</a>
 </section>
-
-<section class="categories" id="categories">
-    <h2 class="section-title">Explore Categories</h2>
-    <div class="category-grid">
-        <div class="category-card" onclick="window.location.href='quiz.html?category=science'">
-            <div class="category-icon">🔬</div>
-            <h3>Science</h3>
-            <p>From physics to biology, test your scientific knowledge</p>
-        </div>
-        <div class="category-card" onclick="window.location.href='quiz.html?category=history'">
-            <div class="category-icon">📚</div>
-            <h3>History</h3>
-            <p>Journey through time and test your historical insights</p>
-        </div>
-        <div class="category-card" onclick="window.location.href='quiz.html?category=technology'">
-            <div class="category-icon">💻</div>
-            <h3>Technology</h3>
-            <p>Stay sharp with the latest in tech and innovation</p>
-        </div>
-        <div class="category-card" onclick="window.location.href='quiz.html?category=arts'">
-            <div class="category-icon">🎨</div>
-            <h3>Arts & Culture</h3>
-            <p>Explore the world of art, music, and literature</p>
-        </div>
-        <div class="category-card" onclick="window.location.href='quiz.html?category=sports'">
-            <div class="category-icon">⚽</div>
-            <h3>Sports</h3>
-            <p>Challenge yourself with sports trivia and facts</p>
-        </div>
-        <div class="category-card" onclick="window.location.href='quiz.html?category=geography'">
-            <div class="category-icon">🌍</div>
-            <h3>Geography</h3>
-            <p>Travel the world through questions and answers</p>
-        </div>
+    <section class="categories" id="categories">
+  <h2 class="section-title">Explore Categories</h2>
+  <div class="category-grid">
+    <div class="category-card" onclick="location.href='quiz.html?category=science'">
+      <div class="category-icon">🔬</div>
+      <h3>Science</h3>
+      <p>Physics, biology, chemistry, and beyond.</p>
     </div>
+
+    <div class="category-card" onclick="location.href='quiz.html?category=history'">
+      <div class="category-icon">📚</div>
+      <h3>History</h3>
+      <p>From ancient civilizations to modern eras.</p>
+    </div>
+
+    <div class="category-card" onclick="location.href='quiz.html?category=technology'">
+      <div class="category-icon">💻</div>
+      <h3>Technology</h3>
+      <p>Computing, AI, gadgets, and innovation.</p>
+    </div>
+
+    <div class="category-card" onclick="location.href='quiz.html?category=arts'">
+      <div class="category-icon">🎨</div>
+      <h3>Arts & Culture</h3>
+      <p>Music, literature, philosophy, and art.</p>
+    </div>
+
+    <div class="category-card" onclick="location.href='quiz.html?category=sports'">
+      <div class="category-icon">⚽</div>
+      <h3>Sports</h3>
+      <p>Global sports trivia and legendary moments.</p>
+    </div>
+
+    <div class="category-card" onclick="location.href='quiz.html?category=geography'">
+      <div class="category-icon">🌍</div>
+      <h3>Geography</h3>
+      <p>Countries, capitals, maps, and landmarks.</p>
+    </div>
+  </div>
 </section>
 
 <section class="features" id="features">
-    <h2 class="section-title">Why QuizMaster?</h2>
-    <div class="features-grid">
-        <div class="feature-item">
-            <div class="feature-icon">⚡</div>
-            <h3>Fast & Fun</h3>
-            <p>Quick rounds that keep you engaged and entertained</p>
-        </div>
-        <div class="feature-item">
-            <div class="feature-icon">🏆</div>
-            <h3>Compete & Win</h3>
-            <p>Challenge yourself and climb the leaderboards</p>
-        </div>
-        <div class="feature-item">
-            <div class="feature-icon">🎯</div>
-            <h3>Learn More</h3>
-            <p>Expand your knowledge while having fun</p>
-        </div>
+  <h2 class="section-title">Why Quizzy?</h2>
+  <div class="features-grid">
+    <div class="feature-item">
+      <div class="feature-icon">⚡</div>
+      <h3>Fast & Engaging</h3>
+      <p>Short rounds designed to keep momentum high.</p>
     </div>
+
+    <div class="feature-item">
+      <div class="feature-icon">🏆</div>
+      <h3>Competitive</h3>
+      <p>Beat scores, climb ranks, and prove mastery.</p>
+    </div>
+
+    <div class="feature-item">
+      <div class="feature-icon">🧠</div>
+      <h3>Knowledge Driven</h3>
+      <p>Every quiz sharpens thinking and recall.</p>
+    </div>
+  </div>
 </section>
 
 <footer>
-    <div class="footer-content">
-        <div class="footer-section">
-            <h4>QuizMaster</h4>
-            <p>Your ultimate destination for interactive quizzes and knowledge challenges.</p>
-        </div>
-        <div class="footer-section">
-            <h4>Quick Links</h4>
-            <ul>
-                <li><a href="#home">Home</a></li>
-                <li><a href="#categories">Categories</a></li>
-                <li><a href="quiz.html">Start Quiz</a></li>
-            </ul>
-        </div>
-        <div class="footer-section">
-            <h4>Support</h4>
-            <ul>
-                <li><a href="#about">About Us</a></li>
-                <li><a href="#contact">Contact</a></li>
-                <li><a href="#faq">FAQ</a></li>
-            </ul>
-        </div>
-        <div class="footer-section">
-            <h4>Legal</h4>
-            <ul>
-                <li><a href="#privacy">Privacy Policy</a></li>
-                <li><a href="#terms">Terms of Service</a></li>
-            </ul>
-        </div>
+  <div class="footer-content">
+    <div class="footer-section">
+      <h4>Quizzy</h4>
+      <p>
+        A modern quiz platform designed to challenge curiosity
+        and reward knowledge.
+      </p>
     </div>
-    <div class="footer-bottom">
-        <p>&copy; 2026 QuizMaster. All rights reserved.</p>
-    </div>
-</footer>
-```
 
+    <div class="footer-section">
+      <h4>Navigation</h4>
+      <ul>
+        <li><a href="#home">Home</a></li>
+        <li><a href="#categories">Categories</a></li>
+        <li><a href="quiz.html">Start Quiz</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-section">
+      <h4>Support</h4>
+      <ul>
+        <li><a href="#about">About</a></li>
+        <li><a href="#contact">Contact</a></li>
+        <li><a href="#faq">FAQ</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-section">
+      <h4>Legal</h4>
+      <ul>
+        <li><a href="#privacy">Privacy Policy</a></li>
+        <li><a href="#terms">Terms of Service</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <p>© 2026 Quizzy. All rights reserved.</p>
+  </div>
+</footer>
 </body>
 </html>
